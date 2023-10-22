@@ -26,7 +26,7 @@ docker-compose -f docker-compose.yaml up
 > 
 > 3. this 4 point can used to inspect the diagonal line a,b (a,b lenght in rectangular shape should very close)
 >
-<img src="https://github.com/pstsengb/Image_for_repository/blob/main/jenkin_use/rectangular_check.png" width="400" height="200"/>
+<img src="https://github.com/pstsengb/Image_for_repository/blob/main/jenkin_use/rectangular_check.png" width="200" height="150"/>
 
 ## jenkin setting
 1.jenkinsfile is ready
