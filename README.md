@@ -15,6 +15,9 @@ docker build -t ros2_x86_no_gpu . -f Dockerfile_ros2_x86_no_gpu
 cd rlab_assignment/docker
 docker-compose -f docker-compose.yaml up
 ```
+* Following video shows that when execute the docker compose  
+<img src="https://github.com/pstsengb/Image_for_repository/blob/main/jenkin_use/nv2_test_video.gif" width="500" height="300"/>
+
 ## jenkin setting
 1.jenkinsfile is ready
 2.Please refer this instructions for Jenkins setting the pipline  [jenkins_for_ros](https://github.com/pstsengb/jenkins_for_ros)
