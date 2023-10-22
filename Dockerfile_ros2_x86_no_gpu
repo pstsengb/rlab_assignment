@@ -1,0 +1,75 @@
+#docker build -t ros2_x86_no_gpu . -f Dockerfile_ros2_x86_no_gpu
+FROM ubuntu:22.04
+
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+RUN apt-get update
+
+RUN apt-get install -y apt-utils && apt-get install -y curl gnupg2 && apt-get install -y lsb-release && apt-get clean all
+
+RUN apt-get -y update \ 
+    && apt-get -y install openssh-client
+
+
+# --- ROS2 Humble Installation
+RUN locale  # check for UTF-8
+
+RUN apt update && apt install -y locales
+RUN locale-gen en_US en_US.UTF-8
+RUN update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+RUN echo "export LANG=en_US.UTF-8" >> /root/.bashrc
+
+RUN locale  # verify settings
+
+RUN apt install -y software-properties-common
+RUN add-apt-repository universe
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
+
+RUN apt-get update && apt-get install -y git
+
+RUN apt install -y ros-humble-desktop
+
+# Install colcon
+RUN apt install -y python3-colcon-common-extensions
+# --- Humble has been installed
+
+RUN apt install -y nano openssh-server 
+RUN apt install -y iputils-ping
+RUN apt install -y net-tools
+RUN apt install -y htop
+RUN apt install -y build-essential
+
+RUN apt install -y ros-humble-teleop-twist-keyboard
+RUN apt install -y ros-humble-rqt-console
+RUN apt install -y ros-humble-rqt-tf-tree
+RUN apt install -y ros-humble-pcl-ros
+
+#nav2 lib
+RUN apt install -y ros-humble-bondcpp
+RUN apt install -y ros-humble-test-msgs
+RUN apt install -y libgraphicsmagick++1-dev
+RUN apt install -y ros-humble-topic-tools
+RUN apt install -y ros-humble-gazebo-ros-pkgs
+RUN apt install -y ros-humble-diagnostic-updater
+RUN bin/bash -c "cd /tmp && git clone -b v3.8 https://github.com/BehaviorTree/BehaviorTree.CPP.git && cd BehaviorTree.CPP && mkdir build && cd build && cmake .. && make install -j10"
+RUN apt install -y ros-humble-turtlebot3-gazebo
+
+#clone navigation 2
+RUN bin/bash -c "mkdir -p /ws_nav2/src && cd /ws_nav2/src && git clone -b humble https://github.com/ros-planning/navigation2.git"
+#remove some useless packages
+RUN bin/bash -c "cd /ws_nav2/src/navigation2 && rm -rf nav2_constrained_smoother && rm -rf nav2_mppi_controller && rm -rf nav2_smac_planner && rm -rf nav2_simple_commander && rm -rf nav2_system_tests"
+# compile nav2
+RUN bin/bash -c "cd /ws_nav2 && source /opt/ros/humble/setup.bash && colcon build --symlink-install --cmake-arg -DCMAKE_BUILD_TYPE=Release"
+
+#export tb3
+RUN /bin/bash -c "echo 'export TURTLEBOT3_MODEL=waffle' >> ~/.bashrc "
+RUN /bin/bash -c "echo 'export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/humble/share/turtlebot3_gazebo/models' >> ~/.bashrc "
+RUN /bin/bash -c "echo 'source /usr/share/gazebo/setup.sh' >> ~/.bashrc "
+
+#clone rlab assignment
+RUN /bin/bash -c "mkdir -p /ws_test/src"
+COPY src /ws_test/src
+RUN /bin/bash -c "source /ws_nav2/install/setup.bash && cd /ws_test && colcon build --symlink-install --cmake-arg -DCMAKE_BUILD_TYPE=Release"
