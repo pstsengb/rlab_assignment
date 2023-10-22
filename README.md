@@ -18,6 +18,16 @@ docker-compose -f docker-compose.yaml up
 * Following video shows that when execute the docker compose  
 <img src="https://github.com/pstsengb/Image_for_repository/blob/main/jenkin_use/nv2_test_video.gif" width="500" height="300"/>
 
+> The workflow of the robot movement and check method:
+> 
+> 1. give the robot initial pose
+> 
+> 2. robot start to movement ,the robot will go to 1,2,3,4 point (it will make the path form a rectangle)
+> 
+> 3. this 4 point can used to inspect the diagonal line a,b (a,b lenght in rectangular shape should very close)
+>
+<img src="https://github.com/pstsengb/Image_for_repository/blob/main/jenkin_use/rectangular_check.png" width="400" height="200"/>
+
 ## jenkin setting
 1.jenkinsfile is ready
 
