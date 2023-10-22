@@ -213,7 +213,11 @@ def main(args=None):
     cmdpub = CmdPubSystem()
     executor = MultiThreadedExecutor()
     executor.add_node(cmdpub)
-    executor.spin()
+    while rclpy.ok():
+        if(cmdpub.state=="Finish"):
+            print('Done') #TestGoodProcess can not get ros log
+            break
+        executor.spin_once(timeout_sec=0.1)
     
 if __name__ == '__main__':
     main()
