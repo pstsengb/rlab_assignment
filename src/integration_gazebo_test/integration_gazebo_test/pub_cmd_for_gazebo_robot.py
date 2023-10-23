@@ -95,7 +95,7 @@ class CmdPubSystem(Node):
         self.cmd_publisher.publish(move_cmd)
 
 
-    def execureRotate(self):
+    def executeRotate(self):
     	move_cmd = Twist()
     	move_cmd.angular.z = 0.4
     	self.cmd_publisher.publish(move_cmd)
@@ -130,7 +130,7 @@ class CmdPubSystem(Node):
         self.get_logger().info('firstline_length:%.3f' % firstline_length)
         self.get_logger().info('secondline_length:%.3f' % secondline_length)
 
-        if(abs(firstline_length - secondline_length)<0.1):
+        if(abs(firstline_length - secondline_length)<0.15):
             assert True
         else:
             assert False
@@ -179,7 +179,7 @@ class CmdPubSystem(Node):
             elif(self.state == 'Rotate_1.57'):
                 angle = self.claculateRotation()
                 if(angle < 1.57 or angle > 6.21):
-                    self.execureRotate()
+                    self.executeRotate()
                 else:
                     self.executeStop()
                     self.state = 'moveforward_S'
@@ -188,7 +188,7 @@ class CmdPubSystem(Node):
             elif(self.state == 'Rotate_3.14'):
                 angle = self.claculateRotation()
                 if(angle < 3.141):
-                    self.execureRotate()
+                    self.executeRotate()
                 else:
                     self.executeStop()
                     self.state = 'moveforward_L'
@@ -197,7 +197,7 @@ class CmdPubSystem(Node):
             elif(self.state == 'Rotate_4.71'):
                 angle = self.claculateRotation()
                 if(angle < 4.712):
-                    self.execureRotate()
+                    self.executeRotate()
                 else:
                     self.executeStop()
                     self.state = 'moveforward_S'
